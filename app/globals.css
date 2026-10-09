@@ -1,8 +1,57 @@
 @import "tailwindcss";
 
 :root {
+  color-scheme: light;
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #293d36;
+  --muted: #65736a;
+  --red: #bd5446;
+  --surface: #ffffff;
+  --surface-soft: #f7f8f2;
+  --border: #dfe5db;
+  --water-label: #8a9f8f;
+  --island-fill: #dce4c6;
+  --island-stroke: #99ae8b;
+  --honshu-fill: #e6e5ce;
+  --hokkaido-fill: #d8e4cb;
+  --shikoku-fill: #e8dfbd;
+  --kyushu-fill: #d7dfc0;
+  --map-ink: #607b60;
+  --marker-fill: #536e5d;
+  --marker-ring: #f9faf5;
+  --marker-halo: #bd544614;
+  --label-fill: #f8f9f1;
+  --label-active: #fff8ee;
+  --leader-stroke: #8e9d88;
+  --inset-stroke: #cad6c9;
+  --selection-background: #e9d5c9;
+}
+
+.game-board[data-theme="night"] {
+  color-scheme: dark;
+  --background: #111b21;
+  --foreground: #e3e9e4;
+  --muted: #adc0b4;
+  --red: #f19f8a;
+  --surface: #1b2a31;
+  --surface-soft: #22353b;
+  --border: #3a525b;
+  --water-label: #91aaac;
+  --island-fill: #34494a;
+  --island-stroke: #718c7a;
+  --honshu-fill: #414b40;
+  --hokkaido-fill: #354b42;
+  --shikoku-fill: #514b39;
+  --kyushu-fill: #3c4b3c;
+  --map-ink: #afc4b1;
+  --marker-fill: #bfd7c0;
+  --marker-ring: #111b21;
+  --marker-halo: #f19f8a22;
+  --label-fill: #1b2a31;
+  --label-active: #302d31;
+  --leader-stroke: #718c86;
+  --inset-stroke: #405758;
+  --selection-background: #425766;
 }
 
 @theme inline {
@@ -12,15 +61,82 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+* { box-sizing: border-box; }
+html, body { width: 100%; height: 100%; }
+body { margin: 0; overflow: hidden; background: var(--background); color: var(--foreground); font-family: var(--font-geist-sans), sans-serif; }
+button { font: inherit; cursor: pointer; }
+button, a, [tabindex] { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, [tabindex]:focus-visible { outline: 2px solid var(--red); outline-offset: 4px; }
+::selection { background: var(--selection-background); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+
+.game-shell, .game-board { width: 100%; height: 100vh; height: 100dvh; }
+.game-board { position: relative; overflow: hidden; isolation: isolate; background: var(--background); color: var(--foreground); }
+.map-stage { position: absolute; inset: 0; overflow: hidden; }
+.japan-map { display: block; width: 100%; height: 100%; user-select: none; }
+
+.sea-label { fill: var(--water-label); font-family: Georgia, serif; font-size: 22px; font-style: italic; letter-spacing: 1px; }
+.ocean-label { fill: var(--water-label); font-size: 16px; letter-spacing: 6px; }
+.island { fill: var(--island-fill); stroke: var(--island-stroke); stroke-width: 1; vector-effect: non-scaling-stroke; stroke-linejoin: round; }
+.island-honshu { fill: var(--honshu-fill); }
+.island-hokkaido { fill: var(--hokkaido-fill); }
+.island-shikoku { fill: var(--shikoku-fill); }
+.island-kyushu { fill: var(--kyushu-fill); }
+.island-labels { fill: var(--map-ink); font-size: 14px; letter-spacing: 3px; pointer-events: none; }
+.island-labels text { text-anchor: middle; }
+.city-marker { cursor: pointer; outline: none; }
+.city-dot { fill: var(--marker-fill); stroke: var(--marker-ring); stroke-width: 2.5; transition: fill 160ms; }
+.city-halo { fill: var(--marker-halo); opacity: 0; transition: opacity 160ms; pointer-events: none; }
+.city-label { fill: var(--foreground); font-size: 17px; font-weight: 500; pointer-events: none; }
+.city-label-background { fill: var(--label-fill); fill-opacity: 0.92; stroke: transparent; }
+.city-leader { fill: none; stroke: var(--leader-stroke); stroke-width: 1; pointer-events: none; }
+.city-marker-active .city-dot { fill: var(--red); }
+.city-marker-active .city-halo, .city-marker:hover .city-halo, .city-marker:focus-visible .city-halo { opacity: 1; }
+.city-marker-active .city-label { fill: var(--red); }
+.city-marker-active .city-label-background, .city-marker:hover .city-label-background { fill: var(--label-active); }
+.city-marker:focus-visible .city-label-background { stroke: var(--red); stroke-width: 2; }
+.inset-background { fill: none; stroke: var(--inset-stroke); stroke-width: 1; stroke-dasharray: 5 4; }
+.inset-title { fill: var(--map-ink); font-size: 10px; letter-spacing: 1px; }
+.inset-label { fill: var(--map-ink); font-size: 12px; }
+.inset-leader { fill: none; stroke: var(--leader-stroke); stroke-width: 0.8; }
+.inset-caption { fill: var(--muted); font-size: 8px; }
+.okinawa-inset { pointer-events: none; }
+
+.theme-toggle { position: absolute; top: max(20px, env(safe-area-inset-top)); right: max(20px, env(safe-area-inset-right)); display: flex; align-items: center; gap: 9px; min-height: 44px; padding: 10px 15px; border: 1px solid var(--border); border-radius: 24px; background: var(--surface); color: var(--foreground); font-size: 12px; }
+.theme-toggle:hover { background: var(--surface-soft); }
+.theme-toggle[aria-pressed="true"] { border-color: var(--red); color: var(--red); }
+.theme-toggle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+
+.city-card { width: min(520px, calc(100vw - 32px)); max-width: none; max-height: calc(100dvh - 32px); margin: auto; padding: 0; overflow-y: auto; overscroll-behavior: contain; border: 1px solid var(--border); border-radius: 22px; background: var(--surface); color: var(--foreground); }
+.city-card::backdrop { background: #0b17216b; }
+.city-card-content { position: relative; padding: 32px; }
+.city-card-close { position: absolute; top: 18px; right: 18px; display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 50%; background: var(--surface); color: var(--foreground); }
+.city-card-close:hover { background: var(--surface-soft); }
+.city-card-close svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
+.city-card-heading { padding-right: 40px; }
+.city-card-region { margin: 0 0 12px; color: var(--muted); font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; }
+.city-card-heading h2 { margin: 0; font-family: Georgia, serif; font-size: 44px; font-weight: 400; letter-spacing: -1px; line-height: 1.15; }
+.city-card-japanese { margin: 8px 0 0; color: var(--red); font-family: serif; font-size: 20px; letter-spacing: 4px; }
+.city-card-description { margin: 24px 0; font-size: 14px; line-height: 1.8; }
+.city-card-highlights h3 { margin: 0 0 12px; font-size: 12px; font-weight: 500; }
+.city-card-highlights ul { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.city-card-highlights li { padding: 7px 10px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-soft); font-size: 11px; line-height: 1.5; }
+.city-card-source { display: flex; align-items: center; gap: 8px; width: fit-content; margin-top: 26px; color: var(--muted); font-size: 11px; line-height: 1.6; text-underline-offset: 4px; }
+.city-card-source:hover { color: var(--red); }
+.city-card-source svg { flex-shrink: 0; width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+
+@media (max-width: 600px) {
+  .theme-toggle { top: max(16px, env(safe-area-inset-top)); right: max(16px, env(safe-area-inset-right)); }
+  .city-card-content { padding: 26px 24px; }
+  .city-card-heading h2 { font-size: 38px; }
+  .island-labels { font-size: 20px; letter-spacing: 2px; }
+  .ocean-label { font-size: 21px; letter-spacing: 4px; }
+  .sea-label { font-size: 26px; }
+  .inset-title { font-size: 15px; letter-spacing: 0; }
+  .inset-label { font-size: 20px; }
+  .inset-caption { display: none; }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }
