@@ -17,7 +17,7 @@ export const cityDescriptions: Record<string, CityDescription> = {
     source: "https://www.japan.travel/en/destinations/kanto/tokyo/",
   },
   kyoto: {
-    description: "Kyoto est un lieu privilégié pour découvrir les traditions japonaises. Ses sanctuaires, ses quartiers anciens et ses machiya, des maisons de ville en bois, témoignent d’une longue histoire culturelle. La culture du thé, l’art floral et le festival Gion Matsuri font vivre ce patrimoine au quotidien, au-delà des monuments.",
+    description: "Kyoto est un lieu privilégié pour découvrir les traditions japonaises. Ses sanctuaires, ses quartiers anciens et ses machiya, des maisons de ville en bois, témoignent d’une longue histoire culturelle. La culture du thé, l’art floral et le festival Gion Matsuri font vivre ce patrimoine au quotidien, sans se limiter aux monuments.",
     highlights: ["Maisons machiya", "Festival Gion Matsuri", "Culture du thé"],
     source: "https://www.japan.travel/en/destinations/kansai/kyoto/",
   },

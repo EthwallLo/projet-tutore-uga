@@ -95,7 +95,7 @@ function CityMarker({ city, active, compact, onSelect }: {
         }
       }}
     >
-      <title>{`Découvrir ${city.name} — ${city.region}`}</title>
+      <title>{`Découvrir ${city.name}, ${city.region}`}</title>
       <g transform={`scale(${compact ? 1.6 : 1})`}>
         {hasLeader && <path className="city-leader" d={`M0 0L${labelX + labelWidth / 2} ${labelY - 5}`} />}
         <circle className="city-halo" r={17} />
@@ -104,6 +104,27 @@ function CityMarker({ city, active, compact, onSelect }: {
         <text className="city-label" x={labelX + 2} y={labelY}>{city.name}</text>
       </g>
     </g>
+  );
+}
+
+function RyukyuInset({ compact = false }: { compact?: boolean }) {
+  return (
+    <svg
+      x={compact ? 175 : undefined}
+      y={compact ? 100 : undefined}
+      width={compact ? 165 : 180}
+      height={compact ? 191 : 209}
+      viewBox="0 0 210 245"
+      className={`okinawa-inset${compact ? "" : " okinawa-inset-desktop"}`}
+      role="img"
+      aria-label="Îles du sud du Japon"
+    >
+      <rect x="1" y="1" width="208" height="243" rx="12" className="inset-background" />
+      <text x="18" y="30" className="inset-title">ÎLES DU SUD</text>
+      {southwestIslands.map((path, index) => <path key={index} d={path} className="island" fillRule="evenodd" />)}
+      <text x="124" y="147" className="inset-label">Okinawa</text>
+      <path d="M120 139 106 124" className="inset-leader" />
+    </svg>
   );
 }
 
@@ -128,7 +149,7 @@ export default function JapanMap() {
           aria-labelledby="map-title map-description"
         >
           <title id="map-title">Carte du Japon</title>
-          <desc id="map-description">Sélectionnez une ville pour ouvrir sa fiche et découvrir sa culture. Hokkaidō, Honshū, Shikoku et Kyūshū sont représentées, avec un encart des îles du sud-ouest.</desc>
+          <desc id="map-description">Sélectionnez une ville pour ouvrir sa fiche et découvrir sa culture. Hokkaidō, Honshū, Shikoku et Kyūshū sont représentées, avec un encart des îles du sud du Japon.</desc>
           <g className="map-world">
             <text className="sea-label" x="290" y="260" transform="rotate(-22 290 260)">Mer du Japon</text>
             <text className="ocean-label" x="735" y="563" textAnchor="middle">OCÉAN</text>
@@ -154,15 +175,9 @@ export default function JapanMap() {
             ))}
           </g>
 
-          <svg x={compact ? 175 : 32} y={compact ? 100 : 275} width={compact ? 165 : 180} height={compact ? 191 : 209} viewBox="0 0 210 245" className="okinawa-inset" aria-label="Îles du sud-ouest, à une échelle différente">
-            <rect x="1" y="1" width="208" height="243" rx="12" className="inset-background" />
-            <text x="18" y="30" className="inset-title">ÎLES DU SUD-OUEST</text>
-            {southwestIslands.map((path, index) => <path key={index} d={path} className="island" fillRule="evenodd" />)}
-            <text x="124" y="147" className="inset-label">Okinawa</text>
-            <path d="M120 139 106 124" className="inset-leader" />
-            <text x="18" y="224" className="inset-caption">Échelle de l’encart différente</text>
-          </svg>
+          {compact && <RyukyuInset compact />}
         </svg>
+        {!compact && <RyukyuInset />}
       </div>
 
       <button className="theme-toggle" type="button" onClick={() => setNightMode(!nightMode)} aria-pressed={nightMode} title={nightMode ? "Revenir au mode jour" : "Activer le mode nuit"}>

@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Japon — Un archipel à explorer",
+  title: "Japon : un archipel à explorer",
   description: "Découvrez six villes japonaises sur une carte interactive, de Sapporo à Fukuoka, avec des fiches culturelles et un mode nuit optionnel.",
 };
 
