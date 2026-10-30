@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useRef, type KeyboardEvent } from "react";
+import { useEffect, useRef, type KeyboardEvent, type ReactNode } from "react";
 import { cityDescriptions } from "@/data/city-descriptions";
 import type { City } from "@/lib/japan";
 
-export default function CityCard({ city, onClose }: {
+export default function CityCard({ city, onClose, children }: {
   city: City | null;
   onClose: () => void;
+  children?: ReactNode;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const details = city ? cityDescriptions[city.id] : null;
@@ -65,6 +66,7 @@ export default function CityCard({ city, onClose }: {
             <h3 id="city-card-highlights-title">À découvrir</h3>
             <ul>{details.highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}</ul>
           </section>
+          {children}
           <a className="city-card-source" href={details.source} target="_blank" rel="noreferrer">
             Guide de l’office du tourisme japonais
             <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M6 14 14 6M6 6h8v8" /></svg>

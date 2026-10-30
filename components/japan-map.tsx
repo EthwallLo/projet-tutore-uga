@@ -2,6 +2,12 @@
 
 import { useState, useSyncExternalStore } from "react";
 import CityCard from "@/components/city-card";
+import MapLandscape from "@/components/map-landscape";
+/* Prototype de jeu mis en pause pour reprendre les mécaniques progressivement
+import GameInterface, { GameCityAction, JourneyOnMap } from "@/components/game-interface";
+import { useGame } from "@/lib/use-game";
+import { DESTINATIONS } from "@/data/game-cards";
+*/
 import {
   cities,
   islands,
@@ -66,6 +72,7 @@ function CityMarker({ city, active, compact, onSelect }: {
   city: City;
   active: boolean;
   compact: boolean;
+  // travelers: number;
   onSelect: (city: City) => void;
 }) {
   const point = project(city.longitude, city.latitude);
@@ -100,8 +107,11 @@ function CityMarker({ city, active, compact, onSelect }: {
         {hasLeader && <path className="city-leader" d={`M0 0L${labelX + labelWidth / 2} ${labelY - 5}`} />}
         <circle className="city-halo" r={17} />
         <circle className="city-dot" r={6} />
-        <rect className="city-label-background" x={labelX - 10} y={labelY - 24} width={labelWidth} height={40} rx={7} />
+        <rect className="city-label-background" x={labelX - 10} y={labelY - 24} width={labelWidth} height={40} rx={1} />
         <text className="city-label" x={labelX + 2} y={labelY}>{city.name}</text>
+        {/* Compteur des voyageurs mis en pause
+        {travelers > 0 && <g className="city-travelers" transform="translate(0 -24)"><circle r="9" /><text y="3" textAnchor="middle">{travelers}</text></g>}
+        */}
       </g>
     </g>
   );
@@ -119,8 +129,8 @@ function RyukyuInset({ compact = false }: { compact?: boolean }) {
       role="img"
       aria-label="Îles du sud du Japon"
     >
-      <rect x="1" y="1" width="208" height="243" rx="12" className="inset-background" />
-      <text x="18" y="30" className="inset-title">ÎLES DU SUD</text>
+      <rect x="1" y="1" width="208" height="243" className="inset-background" />
+      <text x="18" y="30" className="inset-title">ÎLES RYŪKYŪ</text>
       {southwestIslands.map((path, index) => <path key={index} d={path} className="island" fillRule="evenodd" />)}
       <text x="124" y="147" className="inset-label">Okinawa</text>
       <path d="M120 139 106 124" className="inset-leader" />
@@ -129,12 +139,14 @@ function RyukyuInset({ compact = false }: { compact?: boolean }) {
 }
 
 export default function JapanMap() {
+  // const session = useGame();
   const compact = useSyncExternalStore(subscribeToViewport, isCompactViewport, serverSnapshot);
   const nightMode = useSyncExternalStore(subscribeToTheme, isNightMode, serverSnapshot);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selectedCity = cities.find((city) => city.id === selectedId) ?? null;
 
   return (
+    // Pour le jeu : data-playing={session.game ? "true" : undefined}
     <section className="game-board" data-theme={nightMode ? "night" : "day"} aria-label="Explorer les villes du Japon">
       <div
         className="map-stage"
@@ -148,10 +160,10 @@ export default function JapanMap() {
           role="group"
           aria-labelledby="map-title map-description"
         >
-          <title id="map-title">Carte du Japon</title>
+          <title id="map-title">Carte illustrée du Japon</title>
           <desc id="map-description">Sélectionnez une ville pour ouvrir sa fiche et découvrir sa culture. Hokkaidō, Honshū, Shikoku et Kyūshū sont représentées, avec un encart des îles du sud du Japon.</desc>
           <g className="map-world">
-            <text className="sea-label" x="290" y="260" transform="rotate(-22 290 260)">Mer du Japon</text>
+            <text className="sea-label" x={compact ? 370 : 290} y={compact ? 248 : 260} transform={compact ? "rotate(-35 370 248)" : "rotate(-22 290 260)"}>Mer du Japon</text>
             <text className="ocean-label" x="735" y="563" textAnchor="middle">OCÉAN</text>
             <text className="ocean-label" x="735" y="591" textAnchor="middle">PACIFIQUE</text>
 
@@ -163,6 +175,9 @@ export default function JapanMap() {
               ))}
             </g>
 
+            <MapLandscape />
+            {/* {session.game && <JourneyOnMap game={session.game} />} */}
+
             <g className="island-labels" aria-hidden="true">
               <text x="665" y="78">HOKKAIDŌ</text>
               <text x="482" y="348" transform="rotate(-35 482 348)">HONSHŪ</text>
@@ -170,6 +185,7 @@ export default function JapanMap() {
               <text x="284" y="672">KYŪSHŪ</text>
             </g>
 
+            {/* Pour le jeu : travelers={session.game?.players.filter((player) => DESTINATIONS[player.destinationIndex].id === city.id).length ?? 0} */}
             {cities.map((city) => (
               <CityMarker key={city.id} city={city} active={city.id === selectedId} compact={compact} onSelect={(selected) => setSelectedId(selected.id)} />
             ))}
@@ -186,6 +202,12 @@ export default function JapanMap() {
         </svg>
         <span>Mode nuit</span>
       </button>
+      {/* Intégration du jeu mise en pause
+      <GameInterface session={session} />
+      <CityCard city={selectedCity} onClose={() => setSelectedId(null)}>
+        {selectedCity && <GameCityAction session={session} cityId={selectedCity.id} onTravel={() => setSelectedId(null)} />}
+      </CityCard>
+      */}
       <CityCard city={selectedCity} onClose={() => setSelectedId(null)} />
       <p id="map-keyboard-help" className="sr-only">Tab pour choisir une ville, puis Entrée ou Espace pour ouvrir sa fiche. Échap pour fermer la fiche.</p>
     </section>

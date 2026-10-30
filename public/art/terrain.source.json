@@ -1,0 +1,8 @@
+{
+  "asset": "terrain-encre.png",
+  "tool": "Imagegen intégré",
+  "date": "2026-10-30",
+  "usage": "Reliefs et forêts décoratifs sur la carte du Japon, sans valeur topographique",
+  "transparent_background": true,
+  "prompt": "Use case: stylized-concept. Asset type: transparent decorative terrain painting to be clipped into the land shapes of an interactive map of Japan. Generate a tall portrait composition of delicate hand painted mountain ranges, small rolling wooded hills and groves of slender dark pines, as in an antique Japanese illustrated travel map on an old scroll. Elevated oblique view, repeated small landscape forms across the entire canvas, organically connected, generous unpainted channels between groups. Fine imperfect sumi ink contours, little hatched strokes, softly bleeding muted moss green and warm ochre watercolor washes, quiet restrained natural palette. Modest relief scale, many small detailed peaks and trees rather than one huge dramatic mountain. Truly transparent background and transparent unpainted space, including around the irregular exterior of the painting, so the terrain can sit on our own ivory paper. No map coastline, no country silhouette, no text, no lettering or calligraphy, no labels, no symbols, no border or frame, no seals, no grid, no people, no modern objects, no UI, no opaque paper background. The asset should look like fine historical hand brushed cartographic terrain, not a modern vector drawing, not a fantasy video game map, not photorealistic."
+}
